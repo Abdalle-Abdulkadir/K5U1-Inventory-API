@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="CloudNativeInventory.Api/CloudNativeInventory.Api.csproj" />
+  <Project Path="CloudNativeInventory.Tests/CloudNativeInventory.Tests.csproj" Id="a24c4cc1-078f-410b-abf1-b70c97bc97a0" />
+</Solution>

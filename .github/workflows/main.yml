@@ -29,4 +29,12 @@ jobs:
         run: dotnet test --no-build
 
       - name: Build Docker image
-        run: docker build -t inventory-api:latest -t inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .
+        run: |
+          docker login ${{ secrets.ACR_LOGIN_SERVER }} \
+            -u ${{ secrets.ACR_USERNAME }} \
+            -p ${{ secrets.ACR_PASSWORD }}
+        
+          docker build -t k5u1inventoryacr.azurecr.io/inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .
+        
+          docker push k5u1inventoryacr.azurecr.io/inventory-api:${{ github.sha }} 
+

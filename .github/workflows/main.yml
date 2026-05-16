@@ -27,3 +27,6 @@ jobs:
 
       - name: Test
         run: dotnet test --no-build
+
+      - name: Build Docker image
+        run: docker build -t inventory-api:latest -t inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .

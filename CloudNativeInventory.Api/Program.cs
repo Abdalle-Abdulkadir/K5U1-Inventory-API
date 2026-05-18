@@ -3,6 +3,8 @@ using CloudNativeInventory.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using Azure.Identity;
+
 
 // using Azure.Identity; // TODO (Del 4): Krävs för Key Vault
 
@@ -13,11 +15,11 @@ builder.Services.AddOpenApi(); // .NET 9 OpenAPI
 
 // TODO (Del 4 i "Tips och förslag"): Konfigurera Azure Key Vault
 // Använd Managed Identity för att hämta hemligheter i produktion.
-// if (builder.Environment.IsProduction())
-// {
-//     var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);
-//     builder.Configuration.AddAzureKeyVault(keyVaultUrl, new DefaultAzureCredential());
-// }
+if (builder.Environment.IsProduction())
+{
+    var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);
+    builder.Configuration.AddAzureKeyVault(keyVaultUrl, new DefaultAzureCredential());
+}
 
 // Vi använder InMemory-databas lokalt
 builder.Services.AddDbContext<InventoryDbContext>(options =>

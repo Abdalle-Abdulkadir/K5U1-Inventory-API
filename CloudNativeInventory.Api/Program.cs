@@ -14,7 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // .NET 9 OpenAPI
 
 // TODO (Del 4 i "Tips och förslag"): Konfigurera Azure Key Vault
-// Använd Managed Identity för att hämta hemligheter i produktion.
+// Använd Managed Identity för att hämta hemligheter i produktion..
 if (builder.Environment.IsProduction())
 {
     var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);

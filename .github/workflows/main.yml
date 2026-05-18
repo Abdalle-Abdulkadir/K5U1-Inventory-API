@@ -34,7 +34,7 @@ jobs:
             -u ${{ secrets.ACR_USERNAME }} \
             -p ${{ secrets.ACR_PASSWORD }}
         
-          docker build -t k5u1inventoryacr.azurecr.io/inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .
+          docker build -t k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .
         
-          docker push k5u1inventoryacr.azurecr.io/inventory-api:${{ github.sha }} 
+          docker push k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }} 
 

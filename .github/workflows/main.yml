@@ -3,6 +3,7 @@ name: CI
 on:
   push:
     branches: [ "Dev" ]
+
   pull_request:
     branches: [ "Dev" ]
 
@@ -31,10 +32,22 @@ jobs:
       - name: Build Docker image
         run: |
           docker login ${{ secrets.ACR_LOGIN_SERVER }} \
-            -u ${{ secrets.ACR_USERNAME }} \
-            -p ${{ secrets.ACR_PASSWORD }}
-        
+          -u ${{ secrets.ACR_USERNAME }} \
+          -p ${{ secrets.ACR_PASSWORD }}
+
           docker build -t k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }} -f CloudNativeInventory.Api/Dockerfile .
-        
-          docker push k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }} 
+
+          docker push k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }}
+
+      - name: Azure Login
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure Container App
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          containerAppName: inventory-api
+          resourceGroup: k5u1-rg
+          imageToDeploy: k5u1inventryacr.azurecr.io/inventory-api:${{ github.sha }}
 

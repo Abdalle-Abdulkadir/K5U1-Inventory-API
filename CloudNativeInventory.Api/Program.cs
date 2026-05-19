@@ -3,23 +3,22 @@ using CloudNativeInventory.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Scalar.AspNetCore;
+using Azure.Identity;
 
-// using Azure.Identity; // TODO (Del 4): Krävs för Key Vault
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // .NET 9 OpenAPI
 
-// TODO (Del 4 i "Tips och förslag"): Konfigurera Azure Key Vault
-// Använd Managed Identity för att hämta hemligheter i produktion.
-// if (builder.Environment.IsProduction())
-// {
-//     var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);
-//     builder.Configuration.AddAzureKeyVault(keyVaultUrl, new DefaultAzureCredential());
-// }
 
-// Vi använder InMemory-databas lokalt
+if (builder.Environment.IsProduction())
+{
+    var keyVaultUrl = new Uri(builder.Configuration["KeyVaultUrl"]!);
+    builder.Configuration.AddAzureKeyVault(keyVaultUrl, new DefaultAzureCredential());
+}
+
+// we use an in-memory database 
 builder.Services.AddDbContext<InventoryDbContext>(options =>
     options.UseInMemoryDatabase("InventoryDb"));
 
@@ -35,7 +34,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
 
-// Seeda data (se till att vi inte dubblar om appen startas om i samma process)
+// Seed data (avoid duplicates when the app starts multiple times in the same process)
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<InventoryDbContext>();
